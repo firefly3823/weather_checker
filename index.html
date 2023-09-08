@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Suwannaphum:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <title>Weather</title>
+    
+</head>
+
+<body>
+    <section style="height: 100vh; background-image:url(./back1.jpg);" class="d-flex justify-content-center">
+
+        <div class="card text-bg-dark align-self-center" style="width: 80rem;">
+            <img src="./back.jpg" style="opacity: .6;" ; class="card-img" alt="...">
+            <div class="card-img-overlay">
+                <h5 class="card-title fs-1 pb-5">Weather Data</h5>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="w-50 d-inline" style="height: 3rem; border-radius: 10px; background-color: transparent; color: #0fff;"
+                                id="search_query" placeholder="Enter City">
+                            <button class="btn btn-primary" onclick="weather()" type="submit">Search</button>
+                        </div>
+                        <hr>
+                        <Div style="height: 20rem;" id="details" class="d-flex flex-column justify-content-evenly">
+                            <h4>Weather Details</h4>
+                            <hr>
+                            <h6>COUNTRY : </h6>
+                            <h6>HUMIDITY: </h6>
+                            <h6>WIND : </h6>
+                            <h6>PRESSURE : </h6>
+                            <hr>
+                            <div class="icon "><i class="fa-solid fa-sun"></i> <span class=" ps-4"></span> </div>
+                        </Div>
+                    </div>
+                    <div class="col-8" style="height: inherit;">
+                        <div id="extraDeatils" style="height: inherit; text-align: center;"
+                            class=" d-flex flex-column justify-content-start">
+                            <h1 style="font-size: 100px;">0&deg;C</h1>
+                            <h3>Feels Like</h3>
+                            <br>
+                            <h>PLACE</h
+                            <p>Date and time</p>
+                        </div>
+
+                    </div>
+                </div>
+
+    </section>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/58313b35ab.js" crossorigin="anonymous"></script>
+<script>
+    function weather() {
+        if (search_query.value) {
+            api_c = `https://api.openweathermap.org/data/2.5/weather?q=${search_query.value}&appid=8ac5c4d57ba6a4b3dfcf622700447b1e&units=metric`
+
+            const allWeather = async () => {
+                const response = await fetch(api_c)
+                if (response.status >= 200 && response.status < 300) {
+                    const wData = await response.json()
+                    console.log(wData);
+                    current_date = new Date()
+                    details.innerHTML = `
+                        <h4>Weather Details</h4>
+                            <hr>
+                            <h6>COUNTRY :${wData.sys.country} </h6>
+                            <h6>HUMIDITY:${wData.main.humidity} </h6>
+                            <h6>WIND : ${wData.wind.speed} km/h </h6>
+                            <h6>PRESSURE : ${wData.main.pressure}</h6>
+                            <hr>
+                            <div class="icon "><i class="fa-solid fa-sun"></i> <span class=" ps-4">${wData.weather[0].main}</span> </div>`
+
+                    extraDeatils.innerHTML = `
+                        <h1 style="font-size: 100px ;">${wData.main.temp}&deg;C</h1>
+                            <h3>Feels like ${wData.main.feels_like}</h3>
+                            <br>
+                            <h2>${wData.name}</h2>
+                            <p>${current_date}</p>
+                        `
+                }
+                else {
+                    alert(`Error, ${response.status} ${response.statusText}`)
+                }
+            }
+            allWeather()
+        }
+        else {
+            alert("Enter City")
+        }
+    }
+
+</script>
+
+</html>
